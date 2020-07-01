@@ -1,3 +1,7 @@
+import numpy as np
+import tools
+import tools.optim as opt
+
 def train(net, loss_fn, x_train, y_train, batch_size, optimizer, times = 1):
     data_size = x_train.shape[0]
     for loop in range(times):
@@ -21,3 +25,4 @@ if __name__== "__main__":
         {'type':'relu'},
         {'type':'linear','shape':(100, 10)}
     ]
+    loos_fn = tools.crossEntropyLoss
