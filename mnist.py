@@ -25,4 +25,5 @@ if __name__== "__main__":
         {'type':'relu'},
         {'type':'linear','shape':(100, 10)}
     ]
-    loos_fn = tools.crossEntropyLoss
+    loos_fn = tools.crossEntropyLoss()
+    
