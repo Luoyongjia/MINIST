@@ -22,6 +22,10 @@ class Net(Layer):
             layer = Relu()
         elif t == 'Softmax':
             layer = Softmax()
+        elif t == 'Sigmoid':
+            layer = Sigmoid()
+        elif t == 'Tanh':
+            layer = Tanh()
         else:
             raise TypeError
         return layer

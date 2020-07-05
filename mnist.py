@@ -2,7 +2,7 @@ import tools
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import sys
+import time
 
 
 def save(parameters, save_as):
@@ -25,6 +25,7 @@ def train(net, loss_fun, x_train, y_train, batch_size, optimizer, load_file, sav
     acc_val = []
     data_size = X.shape[0]
     if not retrain and os.path.isfile(load_file): load(net.parameters, load_file)
+    starttime = time.time()
     for loop in range(times):
         i = 0
         while i <= data_size - batch_size:
@@ -41,9 +42,11 @@ def train(net, loss_fun, x_train, y_train, batch_size, optimizer, load_file, sav
             acc_val.append(batch_acc)
             if i%50 == 0:
                 print("loop: %d, batch: %5d, batch acc: %2.1f, batch loss: %.2f" % \
-                      (loop, i, batch_acc * 100, batch_loss))
+                      (loop + 1, i, batch_acc * 100, batch_loss))
 
         pass
+    endtime = time.time()
+    print("Used ", round(endtime - starttime, 2)," secs")
     if save_as is not None:
         save(net.parameters, save_as)
 
@@ -61,24 +64,44 @@ def test(net, x_test, y_test, loss_fun):
 
 
 if __name__ == "__main__":
-    netStructure=[
+    netSum = []
+
+    netStructure_Sigmoid = [
+        {'type': 'Linear', 'shape': (784, 200)},
+        {'type': 'Sigmoid'},
+        {'type': 'Linear', 'shape': (200, 100)},
+        {'type': 'Sigmoid'},
+        {'type': 'Linear', 'shape': (100, 10)}
+    ]
+    netStructure_Tanh = [
+        {'type': 'Linear', 'shape': (784, 200)},
+        {'type': 'Tanh'},
+        {'type': 'Linear', 'shape': (200, 100)},
+        {'type': 'Tanh'},
+        {'type': 'Linear', 'shape': (100, 10)}
+    ]
+    netStructure_Relu=[
         {'type': 'Linear', 'shape': (784, 200)},
         {'type': 'Relu'},
         {'type': 'Linear', 'shape': (200, 100)},
         {'type': 'Relu'},
         {'type': 'Linear', 'shape': (100, 10)}
     ]
+    netSum.append(netStructure_Sigmoid)
+    netSum.append(netStructure_Tanh)
+    netSum.append(netStructure_Relu)
     x_train, y_train, x_test, y_test = tools.load_data()
     loss_fn = tools.loss.crossEntropyLoss()
     lr = 0.001
     batch_size = 128
-    net = tools.Net(netStructure)
-    optimizer = tools.optim.SGD(net.parameters, lr)
-    acc, loss = train(net, loss_fn, x_train, y_train, batch_size, optimizer, None, None, times=3, retrain=True)
+    for net in netSum:
+        net = tools.Net(net)
+        optimizer = tools.optim.SGD(net.parameters, lr)
+        acc, loss = train(net, loss_fn, x_train, y_train, batch_size, optimizer, None, None, times=1, retrain=True)
 
-    plt.plot(range(len(loss)), loss)
-    plt.show()
-    plt.plot(range(len(acc)), acc)
-    plt.show()
+        plt.plot(range(len(loss)), loss)
+        plt.show()
+        plt.plot(range(len(acc)), acc)
+        plt.show()
 
-    test(net, x_test, y_test, loss_fn)
+        test(net, x_test, y_test, loss_fn)
