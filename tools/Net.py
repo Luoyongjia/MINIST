@@ -5,13 +5,15 @@ class Net(Layer):
     def __init__(self, layer_configures):
         self.layers = []
         self.parameters = []
+
+        #构建网络，初始化
         for config in layer_configures:
             self.layers.append(self.createLayer(config))
 
-        
     def createLayer(self, config):
         return self.getDefaultLayer(config)
 
+    #创建不同种类的单层网络
     def getDefaultLayer(self, config):
         t = config['type']
         if t == 'Linear':

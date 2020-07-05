@@ -9,11 +9,13 @@ def onehot(targets, num):
 
 
 def load_data(path = '/Users/luoyongjia/Program/py/MNIST/mnist/mnist.npz'):
+    #读取
     f = np.load(path)
     x_train, y_train = f['x_train'], f['y_train']
     x_test, y_test = f['x_test'], f['y_test']
     f.close()
 
+    #数据处理
     x_train = x_train.reshape(60000, 28*28) / 255.
     x_test = x_test.reshape(10000, 28*28) / 255.
 
