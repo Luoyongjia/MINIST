@@ -1,1 +1,1 @@
-from .SGD import SGD
+from .sgd import SGD

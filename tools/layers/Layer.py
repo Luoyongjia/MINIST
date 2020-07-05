@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
-class Layer(metaclass = ABCMeta):
+
+class Layer(metaclass=ABCMeta):
 
     @abstractmethod
     def forward(self, *args):
